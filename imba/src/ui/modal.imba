@@ -157,9 +157,7 @@ tag modal < section
 		return color.to("hsl").toString()
 	
 	def openSuggestedBook bookId\string
-		reader.book=bookId
-		reader.chapter=search.suggestions.chapter
-		reader.verse=search.suggestions.verse
+		reader.openPassage(search.suggestions.translation, bookId, search.suggestions.chapter, search.suggestions.verse)
 	
 	def openSuggestedBookInParallel bookId\string
 		openInParallel({

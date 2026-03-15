@@ -45,6 +45,36 @@ class GenericReader
 				return yes
 		return no
 
+	def openPassage translation\string, book\number|string, chapter\number|string, verse\number|string = undefined
+		const nextBook = parseInt(book)
+		const nextChapter = parseInt(chapter)
+		const sameChapter = self.translation == translation && self.book == nextBook && self.chapter == nextChapter
+
+		self.translation = translation
+		self.book = nextBook
+		self.chapter = nextChapter
+
+		if sameChapter and verse
+			if typeof verse === 'string' and verse.includes('-')
+				const parts = verse.split('-')
+				findVerse(parts[0], parts[1], yes)
+			else
+				findVerse(verse, undefined, yes)
+
+			if me == 'main'
+				const route = window.location.origin + '/' + translation + '/' + nextBook + '/' + nextChapter + '/' + verse + '/'
+				if window.location.href != route
+					window.history.pushState({
+						translation: translation,
+						book: nextBook,
+						chapter: nextChapter,
+					}, '', route)
+
+			self.verse = undefined
+			return
+
+		self.verse = verse
+
 	@computed get chaptersOfCurrentBook
 		for book in books
 			if book.bookid == self.book
